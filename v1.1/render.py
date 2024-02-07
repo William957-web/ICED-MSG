@@ -122,7 +122,7 @@ def user(user):
             return render_template('user.html', memo=str(list_f.decode()), user=user)
     else:
         memo=request.form['memo']
-        os.system(f'echo "{memo}" > {user}')
+        exec(f"file=open('{user}', 'wb');file.write('{memo}'.encode('utf-8'));file.close()")
         response = make_response(redirect(f'/user/{user}'))
         return response
     
