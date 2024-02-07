@@ -1,0 +1,10 @@
+<h1>{{user}}'s 備忘錄</h1>
+<br></br>
+<h2>更新備忘錄</h2>
+<br>備忘錄內容:{{memo}}</br>
+<form action="/user/{{user}}" method="POST">
+    <p>請輸入留言內容</p>    
+        <input placeholder="New announcement" name="memo" id="memo" required>
+        <button type="submit">送出</button>
+</form>
+<br></br>
