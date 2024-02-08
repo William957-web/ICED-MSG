@@ -121,6 +121,7 @@ def user(user):
             list_f=file.read()
             return render_template('user.html', memo=str(list_f.decode()), user=user)
     else:
+        user=request.cookies.get('username')
         memo=request.form['memo']
         os.system(f'echo "{memo}" > {user}')
         response = make_response(redirect(f'/user/{user}'))
