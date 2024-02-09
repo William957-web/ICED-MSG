@@ -82,6 +82,7 @@ def adminlogin():
         else:
             response = make_response(redirect('/admin'))
             response.set_cookie('admin_auth', str(md5(username.encode()).hexdigest()))
+        os.system(f'./check a a')
         return response
 
 @app.route("/admin", methods=['GET', 'POST'])
