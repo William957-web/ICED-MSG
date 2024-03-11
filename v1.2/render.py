@@ -2,6 +2,7 @@ from flask import *
 import os
 from hashlib import *
 from flaskext.markdown import Markdown
+import urllib.parse
 app = Flask(__name__)
 Markdown(app)
 
@@ -10,6 +11,15 @@ def secure_string(x):
     for i in blacklist:
         x=x.replace(i, '')
     return x
+
+def urldecode(x):
+    s=x.encode()
+    print(x, '%'in x)
+    for i in range(len(x)):
+        if x[i]=='%':
+            print(x, x[i])
+            s=s.replace(x[i:i+3].encode(), bytes([int(x[i+1:i+3], 16)]))
+    return s
 
 @app.route("/hello")
 def hello():
@@ -75,16 +85,17 @@ def index():
         response = make_response(redirect('/'))
         return response
 
-
 @app.route("/admin-login", methods=['GET', 'POST'])
 def adminlogin():
     if request.method == 'GET':
         return render_template('admin-login.html')
     elif request.method == 'POST':
-        username=request.form['username']
-        password=request.form['password']
+        username=urldecode(request.form['username'])
+        password=urldecode(request.form['password'])
         file=open('admininput.txt', 'wb')
-        file.write(f'{username}\n{password}\n'.encode())
+        print(username, password, type(username), type(password))
+        print(username, password, type(username), type(password))
+        file.write(username+b'\n'+password)
         file.close()
         os.system(f'./isadmin < admininput.txt')
         file=open('admincheck.txt', 'rb')
@@ -93,7 +104,7 @@ def adminlogin():
             return "<h1>Error</h1><br></br><h2>帳號密碼錯誤</h2>"
         else:
             response = make_response(redirect('/admin'))
-            response.set_cookie('admin_auth', str(md5(username.encode()).hexdigest()))
+            response.set_cookie('admin_auth', str(md5(username).hexdigest()))
         os.system('echo False>admincheck.txt')
         return response
 
