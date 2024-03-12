@@ -6,6 +6,8 @@ import urllib.parse
 app = Flask(__name__)
 Markdown(app)
 
+hexchar='abcdefABCDEF0123456789'
+
 def secure_string(x):
     blacklist="'\";&#`"
     for i in blacklist:
@@ -16,7 +18,7 @@ def urldecode(x):
     s=x.encode()
     print(x, '%'in x)
     for i in range(len(x)):
-        if x[i]=='%':
+        if x[i]=='%' and i+2<len(x):
             print(x, x[i])
             s=s.replace(x[i:i+3].encode(), bytes([int(x[i+1:i+3], 16)]))
     return s
